@@ -40,7 +40,14 @@ const AddTodo = () => {
     setInput("");
 
 
-}
+};
+
+const DeleteTodo = (id:number) => {
+    setTodos(prevTodos => prevTodos.filter((todo) => todo.id !== id));
+
+
+
+};
 
 
 
@@ -55,11 +62,19 @@ const AddTodo = () => {
                 <input type={"text"}  value={input} onChange={HandleInput} />
                 <button onClick={AddTodo}>add</button>
 
-                {/*<ul>*/}
-                {/*    <li>*/}
 
-                {/*    </li>*/}
-                {/*</ul>*/}
+                <ul>
+                    {todos.map(todo => (
+                        <li key={todo.id}>
+                            {todo.text}
+                            <button onClick={() => DeleteTodo(todo.id)}>Delete</button>
+                        </li>
+                    ))}
+                </ul>
+
+
+
+
 
 
             </div>
