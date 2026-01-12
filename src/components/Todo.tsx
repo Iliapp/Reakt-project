@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type {ITodo} from '../types';
+import '../main.scss'
 
 
 
