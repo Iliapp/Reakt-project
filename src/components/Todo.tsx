@@ -67,8 +67,14 @@ const Todo: React.FC = () => {
 
         <>
             <div className="todo">
-                <h1 className="todo__title">To-do App</h1>
-                <input className="todo__input" type={"text"}  value={input} onChange={HandleInput} />
+                <h1 className="todo__title">
+                    <img
+                        src="https://media.tenor.com/EFDwfjT2GuQAAAAM/spinning-cat.gif"
+                    alt="cat spinning"
+                    className="todo__icon"
+                />
+                    To-do App</h1>
+                <input className="todo__input" type={"text"}  value={input} onChange={HandleInput}  placeholder={"Add you task"} />
                 <button className="todo__button" onClick={AddTodo}>add</button>
 
 
