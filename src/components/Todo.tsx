@@ -67,9 +67,26 @@ const Todo: React.FC = () => {
 
         <>
             <div className="todo">
-                <h1 className="todo__title">To-do App</h1>
-                <input className="todo__input" type={"text"}  value={input} onChange={HandleInput} />
+
+                <div className="todo__header">
+
+                    <h1 className="todo__title">
+                        <img
+                            src="https://media.tenor.com/EFDwfjT2GuQAAAAM/spinning-cat.gif"
+                            alt="cat spinning"
+                            className="todo__icon"
+                        />
+                        To-do App</h1>
+
+                </div>
+
+
+
+                <div className="todo__input-wrapper"> ]
+                <input className="todo__input" type={"text"}  value={input} onChange={HandleInput}  placeholder={"Add you task"} />
                 <button className="todo__button" onClick={AddTodo}>add</button>
+
+                </div>
 
 
                 <ul className="todo__list">
@@ -79,7 +96,7 @@ const Todo: React.FC = () => {
                             <span className={`todo__text ${todo.completed ? 'todo__text--completed' : ''}`} >
                             {todo.text}
                             </span>
-                            <button className="todo__button todo__button--delete" onClick={() => DeleteTodo(todo.id)}>Delete</button>
+                            <button className="todo__button--delete" onClick={() => DeleteTodo(todo.id)}>Delete</button>
                         </li>
                     ))}
                 </ul>
@@ -90,7 +107,7 @@ const Todo: React.FC = () => {
 
 
 
-            </div>
+            </div>я
 
 
 
