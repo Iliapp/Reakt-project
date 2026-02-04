@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import type {ITodo} from '../types';
 import '../main.scss'
+import {FaTrashAlt} from 'react-icons/fa'
 
 
 
@@ -92,11 +93,16 @@ const Todo: React.FC = () => {
                 <ul className="todo__list">
                     {todos.map(todo => (
                         <li key={todo.id} className="todo__item">
-                            <input type="checkbox" checked={todo.completed} onChange={() => ToggleTodo(todo.id)}  className="todo__checkbox" />
+                            <input type="checkbox" checked={todo.completed} onChange={() => ToggleTodo(todo.id)}  className="todo__checkbox"  />
                             <span className={`todo__text ${todo.completed ? 'todo__text--completed' : ''}`} >
                             {todo.text}
                             </span>
-                            <button className="todo__button--delete" onClick={() => DeleteTodo(todo.id)}>Delete</button>
+                            <button className="todo__button--delete" onClick={() => DeleteTodo(todo.id)}>
+                                <FaTrashAlt
+                                    size={20}
+                                    color={todo.completed ? "#FF5C5C" : "#adb5bd"}
+                                />
+                            </button>
                         </li>
                     ))}
                 </ul>
@@ -107,7 +113,7 @@ const Todo: React.FC = () => {
 
 
 
-            </div>я
+            </div>
 
 
 
