@@ -32,7 +32,7 @@
 
 ## <span style="color:#FF5C5C">How to install</span>
 ### 1. **Clone repo:** https://github.com/Iliapp/Reakt-project.git
-### 2. **Install dependencies:** npm install react-icons (later and other)
+### 2. **Install dependencies:** npm install react-icons (later add other)
 ### 3. **Start project:** npm run dev
 
 
