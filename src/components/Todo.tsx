@@ -1,15 +1,22 @@
 import React, { useState } from 'react';
-import type { ITodo } from '../types';
-import '../main.scss';
+import type { ITodo } from '../types.ts';
 import { FaTrashAlt } from 'react-icons/fa';
+import {
+	Box,
+	Heading,
+	Image,
+	Input,
+	Button,
+	List,
+	Text,
+	Checkbox,
+	Flex,
+} from '@chakra-ui/react';
+
+import '../main.scss';
 
 const Todo: React.FC = () => {
-	const [todos, setTodos] = useState<ITodo[]>([
-		// {id: 1, text: "first task", completed: false},
-		// {id: 2, text: "second task", completed: true},
-		// {id: 3, text: "second task", completed: false},
-	]);
-
+	const [todos, setTodos] = useState<ITodo[]>([]);
 	const [input, setInput] = useState('');
 
 	const HandleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -17,9 +24,7 @@ const Todo: React.FC = () => {
 	};
 
 	const AddTodo = () => {
-		if (!input.trim()) {
-			return;
-		}
+		if (!input.trim()) return;
 
 		const newTodo: ITodo = {
 			id: Date.now(),
@@ -27,12 +32,12 @@ const Todo: React.FC = () => {
 			completed: false,
 		};
 
-		setTodos((prevTodos) => [...prevTodos, newTodo]);
+		setTodos((prev) => [...prev, newTodo]);
 		setInput('');
 	};
 
 	const DeleteTodo = (id: number) => {
-		setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+		setTodos((prev) => prev.filter((todo) => todo.id !== id));
 	};
 
 	const ToggleTodo = (id: number) => {
@@ -44,64 +49,157 @@ const Todo: React.FC = () => {
 	};
 
 	return (
-		<>
-			<div className="todo">
-				<div className="todo__header">
-					<h1 className="todo__title">
-						<img
-							src="https://media.tenor.com/EFDwfjT2GuQAAAAM/spinning-cat.gif"
-							alt="cat spinning"
-							className="todo__icon"
-						/>
-						To-do App
-					</h1>
-				</div>
+		<Box
+			bg="white"
+			position="absolute"
+			m="auto"
+			top="40%"
+			left="50%"
+			transform="translate(-50%, -50%)"
+			p={8}
+			borderRadius="15px"
+			width="500px"
+			maxWidth="90%"
+			boxShadow="xl"
+			zIndex={10}
+		>
+			<Flex align="center" justify="center" mb={12}>
+				<Image
+					src="https://media.tenor.com/EFDwfjT2GuQAAAAM/spinning-cat.gif"
+					alt="cat spinning"
+					boxSize="30px"
+					mr={3}
+				/>
+				<Heading
+					size="lg"
+					color="black"
+					fontWeight="bold"
+					fontSize="1.7rem"
+					fontFamily="'Oswald', sans-serif"
+					mt={0}
+				>
+					To-do App
+				</Heading>
+			</Flex>
 
-				<div className="todo__input-wrapper">
-					{' '}
-					]
-					<input
-						className="todo__input"
-						type={'text'}
-						value={input}
-						onChange={HandleInput}
-						placeholder={'Add you task'}
-					/>
-					<button className="todo__button" onClick={AddTodo}>
-						add
-					</button>
-				</div>
+			<Flex width="115%" mb={6} ml="-7.5%">
+				<Input
+					type="text"
+					value={input}
+					onChange={HandleInput}
+					placeholder="Add your task"
+					borderRadius="50px"
+					w="400px"
+					right="-3.7rem"
+					h="3.5rem"
+					bg="rgba(128, 128, 128, 0.27)"
+					border="none"
+					color="black"
+					flex={1}
+					pl="1.5rem"
+					_focus={{
+						outline: 'none',
+						boxShadow: 'none',
+					}}
+					_placeholder={{
+						color: 'black',
+						opacity: 0.5,
+					}}
+				/>
+				<Button
+					onClick={AddTodo}
+					bg="#ff5c5c"
+					color="white"
+					border="none"
+					px="20px"
+					py="10px"
+					// right="1rem"
+					borderRadius="50px"
+					fontSize="16px"
+					fontWeight="bold"
+					cursor="pointer"
+					left="-3rem"
+					position="relative"
+					width="125px"
+					h="3.5rem"
+					_hover={{
+						bg: '#e05252',
+					}}
+				>
+					add
+				</Button>
+			</Flex>
 
-				<ul className="todo__list">
-					{todos.map((todo) => (
-						<li key={todo.id} className="todo__item">
-							<input
-								type="checkbox"
+			<List.Root gap={3} mt={4}>
+				{todos.map((todo) => (
+					<List.Item
+						key={todo.id}
+						display="flex"
+						alignItems="flex-start"
+						justifyContent="space-between"
+					>
+						<Flex gap={2} flex={1}>
+							<Checkbox.Root
 								checked={todo.completed}
-								onChange={() => ToggleTodo(todo.id)}
-								className="todo__checkbox"
-							/>
-							<span
-								className={`todo__text ${todo.completed ? 'todo__text--completed' : ''}`}
+								onCheckedChange={() => ToggleTodo(todo.id)}
+								colorPalette="green"
+								mt={1}
+							>
+								<Checkbox.HiddenInput />
+								<Checkbox.Control
+									boxSize="25px"
+									borderRadius="full"
+									borderColor="#555"
+									_checked={{
+										bg: '#4caf50',
+										borderColor: '#4caf50',
+									}}
+								>
+									<Checkbox.Indicator>
+										<Box
+											as="span"
+											fontSize="18px"
+											color="white"
+										>
+											✓
+										</Box>
+									</Checkbox.Indicator>
+								</Checkbox.Control>
+							</Checkbox.Root>
+
+							<Text
+								fontSize="20px"
+								wordBreak="break-word"
+								color={todo.completed ? '#d1d1d1' : 'black'}
+								textDecoration={
+									todo.completed ? 'line-through' : 'none'
+								}
+								lineHeight="1.4"
+								fontFamily="'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif"
 							>
 								{todo.text}
-							</span>
-							<button
-								className="todo__button--delete"
-								onClick={() => DeleteTodo(todo.id)}
-							>
-								<FaTrashAlt
-									size={20}
-									color={
-										todo.completed ? '#FF5C5C' : '#adb5bd'
-									}
-								/>
-							</button>
-						</li>
-					))}
-				</ul>
-			</div>
-		</>
+							</Text>
+						</Flex>
+
+						<Button
+							variant="ghost"
+							onClick={() => DeleteTodo(todo.id)}
+							p={1}
+							minW="auto"
+							h="auto"
+							bg="transparent"
+							ml={2}
+							_hover={{ bg: 'transparent' }}
+						>
+							<FaTrashAlt
+								size={40}
+								color={todo.completed ? '#ff0000' : '#adb5bd'}
+							/>
+						</Button>
+					</List.Item>
+				))}
+			</List.Root>
+		</Box>
 	);
 };
 
