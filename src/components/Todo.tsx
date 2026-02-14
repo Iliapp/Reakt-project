@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { ITodo } from '../types.ts';
 import { FaTrashAlt } from 'react-icons/fa';
 import {
@@ -12,41 +12,98 @@ import {
 	Checkbox,
 	Flex,
 } from '@chakra-ui/react';
-
+import { getTodos, addTodo, updateTodo, deleteTodo } from '../api/todosApi.ts';
 import '../main.scss';
 
 const Todo: React.FC = () => {
 	const [todos, setTodos] = useState<ITodo[]>([]);
 	const [input, setInput] = useState('');
+	const [loading, setLoading] = useState(true);
+	const [loadingId, setLoadingId] = useState<number | null>(null);
+	const [adding, setAdding] = useState(false);
 
 	const HandleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setInput(event.target.value);
 	};
 
-	const AddTodo = () => {
+	const AddTodo = async () => {
 		if (!input.trim()) return;
 
-		const newTodo: ITodo = {
-			id: Date.now(),
-			text: input,
-			completed: false,
-		};
-
-		setTodos((prev) => [...prev, newTodo]);
-		setInput('');
+		try {
+			setAdding(true);
+			const response = await addTodo(input);
+			const newTodo: ITodo = {
+				id: Date.now(),
+				text: response.data.title,
+				completed: response.data.completed,
+			};
+			setTodos((prev) => [...prev, newTodo]);
+			setInput('');
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setAdding(false);
+		}
 	};
 
-	const DeleteTodo = (id: number) => {
-		setTodos((prev) => prev.filter((todo) => todo.id !== id));
+	const DeleteTodo = async (id: number) => {
+		try {
+			setLoadingId(id);
+			await deleteTodo(id);
+			setTodos((prev) => prev.filter((todo) => todo.id !== id));
+		} catch (error) {
+			console.error(error);
+		} finally {
+			setLoadingId(null);
+		}
 	};
 
-	const ToggleTodo = (id: number) => {
+	const ToggleTodo = async (id: number) => {
+		const todo = todos.find((t) => t.id === id);
+		if (!todo) return;
+
+		const oldCompleted = todo.completed;
+
 		setTodos(
-			todos.map((todo) =>
-				todo.id === id ? { ...todo, completed: !todo.completed } : todo
+			todos.map((t) =>
+				t.id === id ? { ...t, completed: !oldCompleted } : t
 			)
 		);
+
+		try {
+			setLoadingId(id);
+			await updateTodo(id, !oldCompleted);
+		} catch (error) {
+			setTodos(
+				todos.map((t) =>
+					t.id === id ? { ...t, completed: oldCompleted } : t
+				)
+			);
+			console.error(error);
+		} finally {
+			setLoadingId(null);
+		}
 	};
+
+	useEffect(() => {
+		const fetchTodos = async () => {
+			try {
+				setLoading(true);
+				const response = await getTodos();
+				const formattedTodos = response.data.map((todo: ITodo) => ({
+					id: todo.id,
+					text: todo.text,
+					completed: todo.completed,
+				}));
+				setTodos(formattedTodos);
+			} catch (error) {
+				console.log(error);
+			} finally {
+				setLoading(false);
+			}
+		};
+		fetchTodos();
+	}, []);
 
 	return (
 		<Box
@@ -108,6 +165,7 @@ const Todo: React.FC = () => {
 				/>
 				<Button
 					onClick={AddTodo}
+					disabled={adding}
 					bg="#ff5c5c"
 					color="white"
 					border="none"
@@ -126,79 +184,90 @@ const Todo: React.FC = () => {
 						bg: '#e05252',
 					}}
 				>
-					add
+					{adding ? 'Adding...' : 'add'}
 				</Button>
 			</Flex>
 
-			<List.Root gap={3} mt={4}>
-				{todos.map((todo) => (
-					<List.Item
-						key={todo.id}
-						display="flex"
-						alignItems="flex-start"
-						justifyContent="space-between"
-					>
-						<Flex gap={2} flex={1}>
-							<Checkbox.Root
-								checked={todo.completed}
-								onCheckedChange={() => ToggleTodo(todo.id)}
-								colorPalette="green"
-								mt={1}
-							>
-								<Checkbox.HiddenInput />
-								<Checkbox.Control
-									boxSize="25px"
-									borderRadius="full"
-									borderColor="#555"
-									_checked={{
-										bg: '#4caf50',
-										borderColor: '#4caf50',
-									}}
-								>
-									<Checkbox.Indicator>
-										<Box
-											as="span"
-											fontSize="18px"
-											color="white"
-										>
-											✓
-										</Box>
-									</Checkbox.Indicator>
-								</Checkbox.Control>
-							</Checkbox.Root>
-
-							<Text
-								fontSize="20px"
-								wordBreak="break-word"
-								color={todo.completed ? '#d1d1d1' : 'black'}
-								textDecoration={
-									todo.completed ? 'line-through' : 'none'
-								}
-								lineHeight="1.4"
-								fontFamily="'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif"
-							>
-								{todo.text}
-							</Text>
-						</Flex>
-
-						<Button
-							variant="ghost"
-							onClick={() => DeleteTodo(todo.id)}
-							p={1}
-							minW="auto"
-							h="auto"
-							bg="transparent"
-							ml={2}
-							_hover={{ bg: 'transparent' }}
+			{loading ? (
+				<Text textAlign="center" py={4} color="gray.500" fontSize="lg">
+					Task loading
+				</Text>
+			) : (
+				<List.Root gap={3} mt={4}>
+					{todos.map((todo) => (
+						<List.Item
+							key={todo.id}
+							display="flex"
+							alignItems="flex-start"
+							justifyContent="space-between"
 						>
-							<FaTrashAlt
-								size={40}
-								color={todo.completed ? '#ff0000' : '#adb5bd'}
-							/>
-						</Button>
-					</List.Item>
-				))}
-			</List.Root>
+							<Flex gap={2} flex={1}>
+								<Checkbox.Root
+									checked={todo.completed}
+									onCheckedChange={() => ToggleTodo(todo.id)}
+									disabled={loadingId === todo.id}
+									colorPalette="green"
+									mt={1}
+								>
+									<Checkbox.HiddenInput />
+									<Checkbox.Control
+										boxSize="25px"
+										borderRadius="full"
+										borderColor="#555"
+										_checked={{
+											bg: '#4caf50',
+											borderColor: '#4caf50',
+										}}
+									>
+										<Checkbox.Indicator>
+											<Box
+												as="span"
+												fontSize="18px"
+												color="white"
+											>
+												✓
+											</Box>
+										</Checkbox.Indicator>
+									</Checkbox.Control>
+								</Checkbox.Root>
+
+								<Text
+									fontSize="20px"
+									wordBreak="break-word"
+									color={todo.completed ? '#d1d1d1' : 'black'}
+									textDecoration={
+										todo.completed ? 'line-through' : 'none'
+									}
+									lineHeight="1.4"
+									fontFamily="'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif"
+									opacity={loadingId === todo.id ? 0.5 : 1}
+								>
+									{todos.indexOf(todo) + 1}. {todo.text}
+								</Text>
+							</Flex>
+
+							<Button
+								variant="ghost"
+								onClick={() => DeleteTodo(todo.id)}
+								disabled={loadingId === todo.id}
+								p={1}
+								minW="auto"
+								h="auto"
+								bg="transparent"
+								ml={2}
+								_hover={{ bg: 'transparent' }}
+							>
+								<FaTrashAlt
+									size={40}
+									color={
+										todo.completed ? '#ff0000' : '#adb5bd'
+									}
+								/>
+							</Button>
+						</List.Item>
+					))}
+				</List.Root>
+			)}
 		</Box>
 	);
 };
