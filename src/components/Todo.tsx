@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import type { ITodo } from '../types.ts';
+// import type { ITodo } from '../types.ts';
 import { FaTrashAlt } from 'react-icons/fa';
 import {
 	Box,
@@ -12,96 +12,106 @@ import {
 	Checkbox,
 	Flex,
 } from '@chakra-ui/react';
-import { getTodos, addTodo, updateTodo, deleteTodo } from '../api/todosApi.ts';
+// import { getTodos, addTodo, updateTodo, deleteTodo } from '../api/todosApi.ts';
+import { useTodoStore } from '../store/todoStore.ts';
 import '../main.scss';
 
 const Todo: React.FC = () => {
-	const [todos, setTodos] = useState<ITodo[]>([]);
+	// const [todos, setTodos] = useState<ITodo[]>([]);
 	const [input, setInput] = useState('');
-	const [loading, setLoading] = useState(true);
-	const [loadingId, setLoadingId] = useState<number | null>(null);
-	const [adding, setAdding] = useState(false);
+	// const [loading, setLoading] = useState(true);
+	// const [loadingId, setLoadingId] = useState<number | null>(null);
+	// const [adding, setAdding] = useState(false);
+
+	const todos = useTodoStore((state) => state.todos);
+	const loading = useTodoStore((state) => state.loading);
+	const adding = useTodoStore((state) => state.adding);
+	const loadingId = useTodoStore((state) => state.loadingId);
+	const addTodo = useTodoStore((state) => state.addTodo);
+	const deleteTodo = useTodoStore((state) => state.deleteTodo);
+	const toggleTodo = useTodoStore((state) => state.toggleTodo);
+	const fetchTodos = useTodoStore((state) => state.fetchTodos);
 
 	const HandleInput = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setInput(event.target.value);
 	};
 
-	const AddTodo = async () => {
-		if (!input.trim()) return;
+	// const AddTodo = async () => {
+	// 	if (!input.trim()) return;
+	//
+	// 	try {
+	// 		setAdding(true);
+	// 		const response = await addTodo(input);
+	// 		const newTodo: ITodo = {
+	// 			id: Date.now(),
+	// 			text: response.data.title,
+	// 			completed: response.data.completed,
+	// 		};
+	// 		setTodos((prev) => [...prev, newTodo]);
+	// 		setInput('');
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	} finally {
+	// 		setAdding(false);
+	// 	}
+	// };
 
-		try {
-			setAdding(true);
-			const response = await addTodo(input);
-			const newTodo: ITodo = {
-				id: Date.now(),
-				text: response.data.title,
-				completed: response.data.completed,
-			};
-			setTodos((prev) => [...prev, newTodo]);
-			setInput('');
-		} catch (error) {
-			console.error(error);
-		} finally {
-			setAdding(false);
-		}
-	};
+	// const DeleteTodo = async (id: number) => {
+	// 	try {
+	// 		setLoadingId(id);
+	// 		await deleteTodo(id);
+	// 		setTodos((prev) => prev.filter((todo) => todo.id !== id));
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	} finally {
+	// 		setLoadingId(null);
+	// 	}
+	// };
 
-	const DeleteTodo = async (id: number) => {
-		try {
-			setLoadingId(id);
-			await deleteTodo(id);
-			setTodos((prev) => prev.filter((todo) => todo.id !== id));
-		} catch (error) {
-			console.error(error);
-		} finally {
-			setLoadingId(null);
-		}
-	};
-
-	const ToggleTodo = async (id: number) => {
-		const todo = todos.find((t) => t.id === id);
-		if (!todo) return;
-
-		const oldCompleted = todo.completed;
-
-		setTodos(
-			todos.map((t) =>
-				t.id === id ? { ...t, completed: !oldCompleted } : t
-			)
-		);
-
-		try {
-			setLoadingId(id);
-			await updateTodo(id, !oldCompleted);
-		} catch (error) {
-			setTodos(
-				todos.map((t) =>
-					t.id === id ? { ...t, completed: oldCompleted } : t
-				)
-			);
-			console.error(error);
-		} finally {
-			setLoadingId(null);
-		}
-	};
+	// const ToggleTodo = async (id: number) => {
+	// 	const todo = todos.find((t) => t.id === id);
+	// 	if (!todo) return;
+	//
+	// 	const oldCompleted = todo.completed;
+	//
+	// 	setTodos(
+	// 		todos.map((t) =>
+	// 			t.id === id ? { ...t, completed: !oldCompleted } : t
+	// 		)
+	// 	);
+	//
+	// 	try {
+	// 		setLoadingId(id);
+	// 		await updateTodo(id, !oldCompleted);
+	// 	} catch (error) {
+	// 		setTodos(
+	// 			todos.map((t) =>
+	// 				t.id === id ? { ...t, completed: oldCompleted } : t
+	// 			)
+	// 		);
+	// 		console.error(error);
+	// 	} finally {
+	// 		setLoadingId(null);
+	// 	}
+	// };
 
 	useEffect(() => {
-		const fetchTodos = async () => {
-			try {
-				setLoading(true);
-				const response = await getTodos();
-				const formattedTodos = response.data.map((todo: ITodo) => ({
-					id: todo.id,
-					text: todo.text,
-					completed: todo.completed,
-				}));
-				setTodos(formattedTodos);
-			} catch (error) {
-				console.log(error);
-			} finally {
-				setLoading(false);
-			}
-		};
+		// const fetchTodos = async () => {
+		// 	try {
+		// 		setLoading(true);
+		// 		const response = await getTodos();
+		// 		const formattedTodos = response.data.map((todo: ITodo) => ({
+		// 			id: todo.id,
+		// 			text: todo.text,
+		// 			completed: todo.completed,
+		// 		}));
+		// 		setTodos(formattedTodos);
+		// 	} catch (error) {
+		// 		console.log(error);
+		// 	} finally {
+		// 		setLoading(false);
+		// 	}
+		// };
 		fetchTodos();
 	}, []);
 
@@ -164,7 +174,10 @@ const Todo: React.FC = () => {
 					}}
 				/>
 				<Button
-					onClick={AddTodo}
+					onClick={() => {
+						addTodo(input);
+						setInput('');
+					}}
 					disabled={adding}
 					bg="#ff5c5c"
 					color="white"
@@ -204,7 +217,7 @@ const Todo: React.FC = () => {
 							<Flex gap={2} flex={1}>
 								<Checkbox.Root
 									checked={todo.completed}
-									onCheckedChange={() => ToggleTodo(todo.id)}
+									onCheckedChange={() => toggleTodo(todo.id)}
 									disabled={loadingId === todo.id}
 									colorPalette="green"
 									mt={1}
@@ -248,7 +261,7 @@ const Todo: React.FC = () => {
 
 							<Button
 								variant="ghost"
-								onClick={() => DeleteTodo(todo.id)}
+								onClick={() => deleteTodo(todo.id)}
 								disabled={loadingId === todo.id}
 								p={1}
 								minW="auto"
