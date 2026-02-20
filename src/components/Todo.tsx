@@ -19,6 +19,7 @@ import { useTodoStore } from '../store/todoStore.ts';
 import '../main.scss';
 
 const MotionListItem = chakra(motion.li);
+// const MotionButton = chakra(motion.button);
 
 const Todo: React.FC = () => {
 	// const [todos, setTodos] = useState<ITodo[]>([]);
@@ -199,6 +200,7 @@ const Todo: React.FC = () => {
 					h="3.5rem"
 					_hover={{
 						bg: '#e05252',
+						transform: 'scale(1)',
 					}}
 				>
 					{adding ? 'Adding...' : 'add'}
@@ -257,25 +259,35 @@ const Todo: React.FC = () => {
 										</Checkbox.Control>
 									</Checkbox.Root>
 
-									<Text
-										fontSize="20px"
-										wordBreak="break-word"
-										color={
-											todo.completed ? '#d1d1d1' : 'black'
-										}
-										textDecoration={
-											todo.completed
-												? 'line-through'
-												: 'none'
-										}
-										lineHeight="1.4"
-										fontFamily="'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif"
-										opacity={
-											loadingId === todo.id ? 0.5 : 1
-										}
+									<motion.div
+										animate={{
+											color: todo.completed
+												? '#d1d1d1'
+												: 'black',
+										}}
 									>
-										{todos.indexOf(todo) + 1}. {todo.text}
-									</Text>
+										{/*transition={{ duration: 0.3 }}*/}
+										<Text
+											fontSize="20px"
+											wordBreak="break-word"
+											// color={
+											// 	todo.completed ? '#d1d1d1' : 'black'
+											// }
+											textDecoration={
+												todo.completed
+													? 'line-through'
+													: 'none'
+											}
+											lineHeight="1.4"
+											fontFamily="'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif"
+											opacity={
+												loadingId === todo.id ? 0.5 : 1
+											}
+										>
+											{todos.indexOf(todo) + 1}.{' '}
+											{todo.text}
+										</Text>
+									</motion.div>
 								</Flex>
 
 								<Button
