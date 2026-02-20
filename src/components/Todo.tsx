@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 // import type { ITodo } from '../types.ts';
 import { FaTrashAlt } from 'react-icons/fa';
+import { motion, AnimatePresence } from 'framer-motion';
+import { chakra } from '@chakra-ui/react';
 import {
 	Box,
 	Heading,
@@ -15,6 +17,8 @@ import {
 // import { getTodos, addTodo, updateTodo, deleteTodo } from '../api/todosApi.ts';
 import { useTodoStore } from '../store/todoStore.ts';
 import '../main.scss';
+
+const MotionListItem = chakra(motion.li);
 
 const Todo: React.FC = () => {
 	// const [todos, setTodos] = useState<ITodo[]>([]);
@@ -206,80 +210,98 @@ const Todo: React.FC = () => {
 					Task loading
 				</Text>
 			) : (
-				<List.Root gap={3} mt={4}>
-					{todos.map((todo) => (
-						<List.Item
-							key={todo.id}
-							display="flex"
-							alignItems="flex-start"
-							justifyContent="space-between"
-						>
-							<Flex gap={2} flex={1}>
-								<Checkbox.Root
-									checked={todo.completed}
-									onCheckedChange={() => toggleTodo(todo.id)}
-									disabled={loadingId === todo.id}
-									colorPalette="green"
-									mt={1}
-								>
-									<Checkbox.HiddenInput />
-									<Checkbox.Control
-										boxSize="25px"
-										borderRadius="full"
-										borderColor="#555"
-										_checked={{
-											bg: '#4caf50',
-											borderColor: '#4caf50',
-										}}
-									>
-										<Checkbox.Indicator>
-											<Box
-												as="span"
-												fontSize="18px"
-												color="white"
-											>
-												✓
-											</Box>
-										</Checkbox.Indicator>
-									</Checkbox.Control>
-								</Checkbox.Root>
-
-								<Text
-									fontSize="20px"
-									wordBreak="break-word"
-									color={todo.completed ? '#d1d1d1' : 'black'}
-									textDecoration={
-										todo.completed ? 'line-through' : 'none'
-									}
-									lineHeight="1.4"
-									fontFamily="'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif"
-									opacity={loadingId === todo.id ? 0.5 : 1}
-								>
-									{todos.indexOf(todo) + 1}. {todo.text}
-								</Text>
-							</Flex>
-
-							<Button
-								variant="ghost"
-								onClick={() => deleteTodo(todo.id)}
-								disabled={loadingId === todo.id}
-								p={1}
-								minW="auto"
-								h="auto"
-								bg="transparent"
-								ml={2}
-								_hover={{ bg: 'transparent' }}
+				// tyt rozibratysia z animation
+				<AnimatePresence>
+					<List.Root gap={3} mt={4}>
+						{todos.map((todo) => (
+							<MotionListItem
+								// as={motion.li}
+								key={todo.id}
+								display="flex"
+								alignItems="flex-start"
+								justifyContent="space-between"
+								initial={{ opacity: 0, y: -20 }}
+								animate={{ opacity: 1, y: 0 }}
+								exit={{ opacity: 0, x: -100 }}
+								// transition={{ duration: 0.3}}
 							>
-								<FaTrashAlt
-									size={40}
-									color={
-										todo.completed ? '#ff0000' : '#adb5bd'
-									}
-								/>
-							</Button>
-						</List.Item>
-					))}
-				</List.Root>
+								<Flex gap={2} flex={1}>
+									<Checkbox.Root
+										checked={todo.completed}
+										onCheckedChange={() =>
+											toggleTodo(todo.id)
+										}
+										disabled={loadingId === todo.id}
+										colorPalette="green"
+										mt={1}
+									>
+										<Checkbox.HiddenInput />
+										<Checkbox.Control
+											boxSize="25px"
+											borderRadius="full"
+											borderColor="#555"
+											_checked={{
+												bg: '#4caf50',
+												borderColor: '#4caf50',
+											}}
+										>
+											<Checkbox.Indicator>
+												<Box
+													as="span"
+													fontSize="18px"
+													color="white"
+												>
+													✓
+												</Box>
+											</Checkbox.Indicator>
+										</Checkbox.Control>
+									</Checkbox.Root>
+
+									<Text
+										fontSize="20px"
+										wordBreak="break-word"
+										color={
+											todo.completed ? '#d1d1d1' : 'black'
+										}
+										textDecoration={
+											todo.completed
+												? 'line-through'
+												: 'none'
+										}
+										lineHeight="1.4"
+										fontFamily="'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif"
+										opacity={
+											loadingId === todo.id ? 0.5 : 1
+										}
+									>
+										{todos.indexOf(todo) + 1}. {todo.text}
+									</Text>
+								</Flex>
+
+								<Button
+									variant="ghost"
+									onClick={() => deleteTodo(todo.id)}
+									disabled={loadingId === todo.id}
+									p={1}
+									minW="auto"
+									h="auto"
+									bg="transparent"
+									ml={2}
+									_hover={{ bg: 'transparent' }}
+								>
+									<FaTrashAlt
+										size={40}
+										color={
+											todo.completed
+												? '#ff0000'
+												: '#adb5bd'
+										}
+									/>
+								</Button>
+							</MotionListItem>
+						))}
+					</List.Root>
+				</AnimatePresence>
 			)}
 		</Box>
 	);
