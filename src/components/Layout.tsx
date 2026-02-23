@@ -27,7 +27,7 @@ const Layout = () => {
 						px={4}
 						py={1}
 						w="400px"
-						borderColor="black"
+						borderColor="#d1d1d1"
 						borderWidth="1px"
 					>
 						<HStack gap={1} justify="center">
