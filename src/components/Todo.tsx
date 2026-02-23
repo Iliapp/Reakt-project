@@ -67,6 +67,18 @@ const Todo: React.FC = () => {
     return (
 
         <>
+            <div className="Todo-center">
+                <h1>To-do App</h1>
+                <input type={"text"}  value={input} onChange={HandleInput} />
+                <button onClick={AddTodo}>add</button>
+
+
+                <ul>
+                    {todos.map(todo => (
+                        <li key={todo.id}>
+                            <input type="checkbox" checked={todo.completed} onChange={() => ToggleTodo(todo.id)} />
+                            {todo.text}
+                            <button onClick={() => DeleteTodo(todo.id)}>Delete</button>
             <div className="todo">
 
                 <div className="todo__header">
