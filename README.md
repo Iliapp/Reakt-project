@@ -1,73 +1,41 @@
-# React + TypeScript + Vite
+# Simple React Todo App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## <span style="color:#FF5C5C">React Todo App </span>
 
-Currently, two official plugins are available:
+#### Simple app to-do-list,created on React using TypeScript. The app allows you to add tasks, mark them as completed, and delete them.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## <span style="color:#FF5C5C">Features</span>
 
-## React Compiler
+### 1. **Add task:** input with button add
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+![img.png](img.png)
 
-## Expanding the ESLint configuration
+### 2. **Check box:** opportunity to mark tasks as completed
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+![img_1.png](img_1.png)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 3. **Delete:** opportunity to delete task which are completed, or task which is not completed
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+![img_2.png](img_2.png)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 4. **Additional:** the app looks good on both large screens and mobile devices.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## <span style="color:#FF5C5C">Tech Stack</span>
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 1. **React:** (Functional Components, Hooks: useState)
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### 2. **TypeScript**
+
+### 3. **SCSS:** (BEM-method)
+
+### 4. **React Icons:** (react-icons)
+
+### 5. **Vite**
+
+## <span style="color:#FF5C5C">How to install</span>
+
+### 1. **Clone repo:** https://github.com/Iliapp/Reakt-project.git
+
+### 2. **Install dependencies:** npm install react-icons (later and other)
+
+### 3. **Start project:** npm run dev
