@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import type {ITodo} from '../types';
+import '../main.scss'
+import {FaTrashAlt} from 'react-icons/fa'
 
 
 
@@ -77,9 +79,46 @@ const Todo: React.FC = () => {
                             <input type="checkbox" checked={todo.completed} onChange={() => ToggleTodo(todo.id)} />
                             {todo.text}
                             <button onClick={() => DeleteTodo(todo.id)}>Delete</button>
+            <div className="todo">
+
+                <div className="todo__header">
+
+                    <h1 className="todo__title">
+                        <img
+                            src="https://media.tenor.com/EFDwfjT2GuQAAAAM/spinning-cat.gif"
+                            alt="cat spinning"
+                            className="todo__icon"
+                        />
+                        To-do App</h1>
+
+                </div>
+
+
+
+                <div className="todo__input-wrapper"> ]
+                <input className="todo__input" type={"text"}  value={input} onChange={HandleInput}  placeholder={"Add you task"} />
+                <button className="todo__button" onClick={AddTodo}>add</button>
+
+                </div>
+
+
+                <ul className="todo__list">
+                    {todos.map(todo => (
+                        <li key={todo.id} className="todo__item">
+                            <input type="checkbox" checked={todo.completed} onChange={() => ToggleTodo(todo.id)}  className="todo__checkbox"  />
+                            <span className={`todo__text ${todo.completed ? 'todo__text--completed' : ''}`} >
+                            {todo.text}
+                            </span>
+                            <button className="todo__button--delete" onClick={() => DeleteTodo(todo.id)}>
+                                <FaTrashAlt
+                                    size={20}
+                                    color={todo.completed ? "#FF5C5C" : "#adb5bd"}
+                                />
+                            </button>
                         </li>
                     ))}
                 </ul>
+
 
 
 
